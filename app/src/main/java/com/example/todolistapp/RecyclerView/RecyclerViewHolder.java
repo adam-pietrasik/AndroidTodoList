@@ -33,6 +33,31 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
     }
 
+    public TextView getTitleTv() {
+        return titleTv;
+    }
 
+    public TextView getDescriptionTv() {
+        return descriptionTv;
+    }
 
+    public TextView getTaskCreatedTimeTv() {
+        return taskCreatedTimeTv;
+    }
+
+    public TextView getTaskCompletedTimeTv() {
+        return taskCompletedTimeTv;
+    }
+
+    public TextView getDoneTv() {
+        return doneTv;
+    }
+
+    public TextView getCategoryTv() {
+        return categoryTv;
+    }
+
+    public CheckBox getNotificationCb() {
+        return notificationCb;
+    }
 }
