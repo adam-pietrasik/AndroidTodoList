@@ -30,6 +30,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         doneTv = itemView.findViewById(R.id.taskDoneTextView);
         categoryTv = itemView.findViewById(R.id.taskCategory);
         notificationCb = itemView.findViewById(R.id.notificationCheckBox);
+        notificationCb.setClickable(false);
 
     }
 

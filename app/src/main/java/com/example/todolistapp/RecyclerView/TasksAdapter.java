@@ -1,6 +1,5 @@
 package com.example.todolistapp.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,8 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         holder.getDescriptionTv().setText(taskDataList.get(position).getDescription());
         holder.getTaskCreatedTimeTv().setText(taskDataList.get(position).getCreationTime());
         holder.getNotificationCb().setChecked(taskDataList.get(position).isNotificationEnable());
+        holder.getCategoryTv().setText(taskDataList.get(position).getCategory());
+        holder.getTaskCompletedTimeTv().setText(taskDataList.get(position).getTaskEndDate());
     }
 
     @Override

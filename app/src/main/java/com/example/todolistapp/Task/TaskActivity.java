@@ -2,11 +2,17 @@ package com.example.todolistapp.Task;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.todolistapp.R;
@@ -18,14 +24,21 @@ public class TaskActivity extends AppCompatActivity {
 
     private EditText taskTitleEditText;
     private EditText taskDescriptionEditText;
+    private EditText categoryNameEditText;
     private CheckBox taskNotification;
     private Button addTaskButton;
+    private Button chooseDateButton;
 
     private String title;
     private String description;
+    private String category;
+    private String taskEndDate;
 
     private boolean dataNotFull = true;
     private TaskData taskData;
+
+    DatePickerDialog datePickerDialog;
+    Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +48,15 @@ public class TaskActivity extends AppCompatActivity {
         taskTitleEditText = findViewById(R.id.titleEditText);
         taskDescriptionEditText = findViewById(R.id.descriptionEditText);
         taskNotification = findViewById(R.id.notificationTaskCheckBox);
+        categoryNameEditText = findViewById(R.id.taskCategoryEditText);
         addTaskButton = findViewById(R.id.addTaskButton);
+        chooseDateButton = findViewById(R.id.chooseDate);
+
+        chooseDateButton.setOnClickListener(l ->{
+                showDateTimePicker();
+            }
+        );
+
 
         taskCreate();
     }
@@ -53,10 +74,20 @@ public class TaskActivity extends AppCompatActivity {
                 Toast.makeText(this, "No description set", Toast.LENGTH_SHORT).show();
                 dataNotFull = true;
             }
+            category = categoryNameEditText.getText().toString();
+            if(category.isEmpty()){
+                Toast.makeText(this, "No category set", Toast.LENGTH_SHORT).show();
+                dataNotFull = true;
+            }
+            if(taskEndDate.isEmpty()){
+                Toast.makeText(this, "No end date set", Toast.LENGTH_SHORT).show();
+                dataNotFull = true;
+            }
             boolean notificationEnabled = taskNotification.isChecked();
             if(!dataNotFull){
                 String currentDate = getTaskCreationDate();
-                taskData = new TaskData(title, description, currentDate, notificationEnabled);
+                taskData = new TaskData(title, description, currentDate, notificationEnabled,
+                                        category, taskEndDate);
                 sendBackToMainActivity(taskData);
             }
         });
@@ -75,5 +106,28 @@ public class TaskActivity extends AppCompatActivity {
         mainActivity.putExtra("TaskInformations", taskInformations);
         setResult(RESULT_OK, mainActivity);
         finish();
+    }
+
+    private void showDateTimePicker(){
+        calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        datePickerDialog = new DatePickerDialog(this,
+                (datePicker, y, M, d) -> { //year, month, day
+                    taskEndDate = checkDigit(d) + "/" + checkDigit(M) + "/" + y;
+                    new TimePickerDialog(this, (view, h, m) -> { //hour, minute
+                        taskEndDate = taskEndDate + " " + checkDigit(h) + ":" + checkDigit(m);
+                    }, hour, minute, true).show();
+                },
+                year, month, dayOfMonth);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+        datePickerDialog.show();
+    }
+
+    private String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
     }
 }

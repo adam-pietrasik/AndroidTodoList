@@ -8,15 +8,21 @@ public class TaskData implements Parcelable {
     private String title;
     private String description;
     private String creationTime;
+    private String category;
+    private String taskEndDate;
+
     private boolean notificationEnable;
 
     public TaskData(){}
 
-    public TaskData(String title, String description, String creationTime, boolean notificationEnable) {
+    public TaskData(String title, String description, String creationTime,
+                    boolean notificationEnable, String category, String taskEndDate) {
         this.title = title;
         this.description = description;
         this.creationTime = creationTime;
         this.notificationEnable = notificationEnable;
+        this.category = category;
+        this.taskEndDate = taskEndDate;
     }
 
     protected TaskData(Parcel in) {
@@ -24,6 +30,8 @@ public class TaskData implements Parcelable {
         description = in.readString();
         creationTime = in.readString();
         notificationEnable = in.readByte() != 0;
+        category = in.readString();
+        taskEndDate = in.readString();
     }
 
     public static final Creator<TaskData> CREATOR = new Creator<TaskData>() {
@@ -70,6 +78,22 @@ public class TaskData implements Parcelable {
         this.notificationEnable = notificationEnable;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getTaskEndDate() {
+        return taskEndDate;
+    }
+
+    public void setTaskEndDate(String taskEndDate) {
+        this.taskEndDate = taskEndDate;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -81,7 +105,10 @@ public class TaskData implements Parcelable {
         parcel.writeString(this.description);
         parcel.writeString(this.creationTime);
         parcel.writeBoolean(this.notificationEnable);
+        parcel.writeString(this.category);
+        parcel.writeString(this.taskEndDate);
     }
+
 
     @Override
     public String toString() {
@@ -89,6 +116,8 @@ public class TaskData implements Parcelable {
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", creationTime='" + creationTime + '\'' +
+                ", category='" + category + '\'' +
+                ", taskEndDate='" + taskEndDate + '\'' +
                 ", notificationEnable=" + notificationEnable +
                 '}';
     }
