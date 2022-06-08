@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.todolistapp.Database.TaskDatabase;
 import com.example.todolistapp.R;
 
 import java.text.SimpleDateFormat;
@@ -79,7 +80,7 @@ public class TaskActivity extends AppCompatActivity {
                 Toast.makeText(this, "No category set", Toast.LENGTH_SHORT).show();
                 dataNotFull = true;
             }
-            if(taskEndDate.isEmpty()){
+            if(taskEndDate == null){
                 Toast.makeText(this, "No end date set", Toast.LENGTH_SHORT).show();
                 dataNotFull = true;
             }
@@ -88,7 +89,7 @@ public class TaskActivity extends AppCompatActivity {
                 String currentDate = getTaskCreationDate();
                 taskData = new TaskData(title, description, currentDate, notificationEnabled,
                                         category, taskEndDate);
-                sendBackToMainActivity(taskData);
+                saveDataToDatabase(taskData);
             }
         });
     }
@@ -99,12 +100,11 @@ public class TaskActivity extends AppCompatActivity {
         return formatter.format(date);
     }
 
-    private void sendBackToMainActivity(TaskData taskData){
-        Intent mainActivity = new Intent();
-        Bundle taskInformations = new Bundle();
-        taskInformations.putParcelable("TaskData", taskData);
-        mainActivity.putExtra("TaskInformations", taskInformations);
-        setResult(RESULT_OK, mainActivity);
+    private void saveDataToDatabase(TaskData taskData){
+        TaskDatabase db = TaskDatabase.getDbInstance(this);
+        db.taskDAO().insertAll(taskData);
+
+        setResult(RESULT_OK);
         finish();
     }
 
