@@ -1,17 +1,30 @@
 package com.example.todolistapp.Task;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
-public class TaskData implements Parcelable {
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-    private String title;
-    private String description;
-    private String creationTime;
-    private String category;
-    private String taskEndDate;
+@Entity(tableName = "task_data_table")
+public class TaskData {
 
-    private boolean notificationEnable;
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+    public String title;
+    public String description;
+
+    @ColumnInfo(name = "creation_time")
+    public String creationTime;
+    public String category;
+
+    @ColumnInfo(name = "task_end_date")
+    public String taskEndDate;
+
+    @ColumnInfo(name = "notification_enable")
+    public boolean notificationEnable;
+
+    @ColumnInfo(name = "task_done")
+    public boolean taskDone;
 
     public TaskData(){}
 
@@ -25,100 +38,64 @@ public class TaskData implements Parcelable {
         this.taskEndDate = taskEndDate;
     }
 
-    protected TaskData(Parcel in) {
-        title = in.readString();
-        description = in.readString();
-        creationTime = in.readString();
-        notificationEnable = in.readByte() != 0;
-        category = in.readString();
-        taskEndDate = in.readString();
-    }
-
-    public static final Creator<TaskData> CREATOR = new Creator<TaskData>() {
-        @Override
-        public TaskData createFromParcel(Parcel in) {
-            return new TaskData(in);
-        }
-
-        @Override
-        public TaskData[] newArray(int size) {
-            return new TaskData[size];
-        }
-    };
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime;
-    }
-
-    public boolean isNotificationEnable() {
-        return notificationEnable;
-    }
-
-    public void setNotificationEnable(boolean notificationEnable) {
-        this.notificationEnable = notificationEnable;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getTaskEndDate() {
-        return taskEndDate;
-    }
-
-    public void setTaskEndDate(String taskEndDate) {
-        this.taskEndDate = taskEndDate;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.title);
-        parcel.writeString(this.description);
-        parcel.writeString(this.creationTime);
-        parcel.writeBoolean(this.notificationEnable);
-        parcel.writeString(this.category);
-        parcel.writeString(this.taskEndDate);
-    }
-
-
-    @Override
-    public String toString() {
-        return "TaskData{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", creationTime='" + creationTime + '\'' +
-                ", category='" + category + '\'' +
-                ", taskEndDate='" + taskEndDate + '\'' +
-                ", notificationEnable=" + notificationEnable +
-                '}';
-    }
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
+//
+//    public String getDescription() {
+//        return description;
+//    }
+//
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
+//
+//    public String getCreationTime() {
+//        return creationTime;
+//    }
+//
+//    public void setCreationTime(String creationTime) {
+//        this.creationTime = creationTime;
+//    }
+//
+//    public boolean isNotificationEnable() {
+//        return notificationEnable;
+//    }
+//
+//    public void setNotificationEnable(boolean notificationEnable) {
+//        this.notificationEnable = notificationEnable;
+//    }
+//
+//    public String getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(String category) {
+//        this.category = category;
+//    }
+//
+//    public String getTaskEndDate() {
+//        return taskEndDate;
+//    }
+//
+//    public void setTaskEndDate(String taskEndDate) {
+//        this.taskEndDate = taskEndDate;
+//    }
+//
+//
+//    @Override
+//    public String toString() {
+//        return "TaskData{" +
+//                "title='" + title + '\'' +
+//                ", description='" + description + '\'' +
+//                ", creationTime='" + creationTime + '\'' +
+//                ", category='" + category + '\'' +
+//                ", taskEndDate='" + taskEndDate + '\'' +
+//                ", notificationEnable=" + notificationEnable +
+//                '}';
+//    }
 }
