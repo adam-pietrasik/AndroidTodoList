@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.example.todolistapp.Database.TaskDatabase;
 import com.example.todolistapp.RecyclerView.TasksAdapter;
 import com.example.todolistapp.Task.TaskActivity;
 import com.example.todolistapp.Task.TaskData;
@@ -53,29 +54,20 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == Activity.RESULT_OK){
-                    Intent data = result.getData();
-                    if(data != null){
-                        Bundle bundle = data.getParcelableExtra("TaskInformations");
-                        taskData = bundle.getParcelable("TaskData");
-                        if(taskData != null) {
-                            if(taskDataList == null){
-                                taskDataList = adapter.getItems();
-                            }
-                            addDataToTaskList(taskData);
-                        }
-                    }
-
+                    addDataToTaskList();
                 }
             }
         );
 
-    private void addDataToTaskList(TaskData taskData){
-        taskDataList.add(taskData);
+    @SuppressLint("NotifyDataSetChanged")
+    private void addDataToTaskList(){
+        TaskDatabase db = TaskDatabase.getDbInstance(this);
+        taskDataList = db.taskDAO().getAllData();
         adapter.setItems(taskDataList);
         adapter.notifyDataSetChanged();
     }
@@ -85,22 +77,22 @@ public class MainActivity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if(taskData != null){
-            outState.putParcelableArrayList("TaskDataList", (ArrayList<? extends Parcelable>) taskDataList);
-            getIntent().putExtras(outState);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Intent intent = getIntent();
-        Bundle data = intent.getExtras();
-        if(data != null){
-            taskDataList = data.getParcelableArrayList("TaskData");
-        }
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if(taskData != null){
+//            outState.putParcelableArrayList("TaskDataList", (ArrayList<? extends Parcelable>) taskDataList);
+//            getIntent().putExtras(outState);
+//        }
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Intent intent = getIntent();
+//        Bundle data = intent.getExtras();
+//        if(data != null){
+//            taskDataList = data.getParcelableArrayList("TaskData");
+//        }
+//    }
 }

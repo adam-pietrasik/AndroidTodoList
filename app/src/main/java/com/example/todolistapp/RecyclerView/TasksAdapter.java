@@ -29,12 +29,12 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        holder.getTitleTv().setText(taskDataList.get(position).getTitle());
-        holder.getDescriptionTv().setText(taskDataList.get(position).getDescription());
-        holder.getTaskCreatedTimeTv().setText(taskDataList.get(position).getCreationTime());
-        holder.getNotificationCb().setChecked(taskDataList.get(position).isNotificationEnable());
-        holder.getCategoryTv().setText(taskDataList.get(position).getCategory());
-        holder.getTaskCompletedTimeTv().setText(taskDataList.get(position).getTaskEndDate());
+        holder.getTitleTv().setText(taskDataList.get(position).title);
+        holder.getDescriptionTv().setText(taskDataList.get(position).description);
+        holder.getTaskCreatedTimeTv().setText(taskDataList.get(position).creationTime);
+        holder.getNotificationCb().setChecked(taskDataList.get(position).notificationEnable);
+        holder.getCategoryTv().setText(taskDataList.get(position).category);
+        holder.getTaskCompletedTimeTv().setText(taskDataList.get(position).taskEndDate);
     }
 
     @Override
