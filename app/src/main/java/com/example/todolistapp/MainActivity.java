@@ -2,7 +2,6 @@ package com.example.todolistapp;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,25 +10,30 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.todolistapp.Database.TaskDatabase;
+import com.example.todolistapp.RecyclerView.OnTaskClickListener;
 import com.example.todolistapp.RecyclerView.TasksAdapter;
 import com.example.todolistapp.Task.TaskActivity;
 import com.example.todolistapp.Task.TaskData;
+import com.example.todolistapp.Task.TaskInformationActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTaskClickListener {
 
     private List<TaskData> taskDataList;
     private TaskData taskData;
 
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private TasksAdapter adapter;
+
+    private EditText searchInput;
+    private ImageButton searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +43,18 @@ public class MainActivity extends AppCompatActivity {
         taskDataList = new ArrayList<>();
 
         initRecyclerView();
+        setTaskListData();
+
+        searchInput = findViewById(R.id.searchEditText);
+        searchButton = findViewById(R.id.searchButtonId);
 
         FloatingActionButton addTaskButton = findViewById(R.id.addTask);
         addTaskButton.setOnClickListener(l -> {
             changeActivity();
+        });
+
+        searchButton.setOnClickListener(l -> {
+            searchData();
         });
     }
 
@@ -50,22 +62,32 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.todoListRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new TasksAdapter(taskDataList);
+        adapter = new TasksAdapter(taskDataList, this);
         recyclerView.setAdapter(adapter);
     }
 
 
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+    ActivityResultLauncher<Intent> taskActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == Activity.RESULT_OK){
-                    addDataToTaskList();
+                    setTaskListData();
                 }
             }
         );
 
+
+    ActivityResultLauncher<Intent> taskInformationResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode() == Activity.RESULT_OK){
+                    setTaskListData();
+                }
+            }
+    );
+
     @SuppressLint("NotifyDataSetChanged")
-    private void addDataToTaskList(){
+    private void setTaskListData(){
         TaskDatabase db = TaskDatabase.getDbInstance(this);
         taskDataList = db.taskDAO().getAllData();
         adapter.setItems(taskDataList);
@@ -74,9 +96,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeActivity(){
         Intent intent = new Intent(this, TaskActivity.class);
-        activityResultLauncher.launch(intent);
+        taskActivityResultLauncher.launch(intent);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void searchData(){
+        String searchTitle = searchInput.getText().toString();
+        if(searchTitle.isEmpty()){
+            setTaskListData();
+        }
+        else{
+            TaskDatabase db = TaskDatabase.getDbInstance(this);
+            taskDataList = db.taskDAO().getTasksByTitle(searchTitle);
+            adapter.setItems(taskDataList);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        int id = taskDataList.get(position).id;
+        Intent intent = new Intent(this, TaskInformationActivity.class);
+        intent.putExtra("Task_id", id);
+        taskInformationResultLauncher.launch(intent);
+    }
 //    @Override
 //    protected void onSaveInstanceState(@NonNull Bundle outState) {
 //        super.onSaveInstanceState(outState);

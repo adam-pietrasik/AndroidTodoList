@@ -15,16 +15,18 @@ import java.util.List;
 public class TasksAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     private List<TaskData> taskDataList;
+    private OnTaskClickListener onTaskClickListener;
 
-    public TasksAdapter(List<TaskData> taskDataList){
+    public TasksAdapter(List<TaskData> taskDataList, OnTaskClickListener onTaskClickListener){
         this.taskDataList = taskDataList;
+        this.onTaskClickListener = onTaskClickListener;
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_layout, parent, false);
-        return new RecyclerViewHolder(view);
+        return new RecyclerViewHolder(view, onTaskClickListener);
     }
 
     @Override

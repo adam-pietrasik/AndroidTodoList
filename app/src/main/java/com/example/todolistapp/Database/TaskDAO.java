@@ -13,18 +13,23 @@ import java.util.List;
 @Dao
 public interface TaskDAO {
 
-    @Query("SELECT * FROM task_data_table")
+    @Query("SELECT * FROM task_data_table ORDER BY task_end_date ASC")
     List<TaskData> getAllData();
 
     @Query("SELECT * FROM task_data_table WHERE category LIKE :category")
     List<TaskData> getAllCategories(String category);
 
-    @Query("SELECT * FROM task_data_table WHERE title LIKE :title LIMIT 1")
-    TaskData getTaskByTitle(String title);
+    @Query("SELECT * FROM task_data_table WHERE title LIKE :title || '%' ")
+    List<TaskData> getTasksByTitle(String title);
+
+    @Query("SELECT * FROM task_data_table WHERE id LIKE :id LIMIT 1")
+    TaskData getTaskById(int id);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskData... taskData);
 
-    @Update
-    void updateTask(TaskData taskData);
+    @Query("UPDATE task_data_table SET title = :title, description = :description, " +
+            "category = :category, notification_enable = :notificationChecked WHERE id = :id")
+    void updateTask(String title, String description,
+                    String category, boolean notificationChecked, int id);
 }
