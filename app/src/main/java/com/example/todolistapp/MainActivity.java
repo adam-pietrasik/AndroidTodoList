@@ -12,18 +12,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.todolistapp.Database.TaskDatabase;
+import com.example.todolistapp.RecyclerView.OnTaskClickListener;
 import com.example.todolistapp.RecyclerView.TasksAdapter;
 import com.example.todolistapp.Task.TaskActivity;
 import com.example.todolistapp.Task.TaskData;
+import com.example.todolistapp.Task.TaskInformationActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTaskClickListener {
 
     private List<TaskData> taskDataList;
     private TaskData taskData;
@@ -61,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.todoListRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new TasksAdapter(taskDataList);
+        adapter = new TasksAdapter(taskDataList, this);
         recyclerView.setAdapter(adapter);
     }
 
 
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+    ActivityResultLauncher<Intent> taskActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == Activity.RESULT_OK){
@@ -74,6 +75,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         );
+
+
+    ActivityResultLauncher<Intent> taskInformationResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode() == Activity.RESULT_OK){
+                    setTaskListData();
+                }
+            }
+    );
 
     @SuppressLint("NotifyDataSetChanged")
     private void setTaskListData(){
@@ -85,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeActivity(){
         Intent intent = new Intent(this, TaskActivity.class);
-        activityResultLauncher.launch(intent);
+        taskActivityResultLauncher.launch(intent);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -96,10 +107,18 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             TaskDatabase db = TaskDatabase.getDbInstance(this);
-            taskDataList = db.taskDAO().getTaskByTitle(searchTitle);
+            taskDataList = db.taskDAO().getTasksByTitle(searchTitle);
             adapter.setItems(taskDataList);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        int id = taskDataList.get(position).id;
+        Intent intent = new Intent(this, TaskInformationActivity.class);
+        intent.putExtra("Task_id", id);
+        taskInformationResultLauncher.launch(intent);
     }
 //    @Override
 //    protected void onSaveInstanceState(@NonNull Bundle outState) {

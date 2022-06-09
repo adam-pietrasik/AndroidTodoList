@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolistapp.R;
 
-public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView titleTv;
     private TextView descriptionTv;
@@ -20,7 +20,9 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
     private CheckBox notificationCb;
 
-    public RecyclerViewHolder(@NonNull View itemView){
+    private OnTaskClickListener onTaskClickListener;
+
+    public RecyclerViewHolder(@NonNull View itemView, OnTaskClickListener onTaskClickListener){
         super(itemView);
 
         titleTv = itemView.findViewById(R.id.titleTextView);
@@ -31,7 +33,9 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         categoryTv = itemView.findViewById(R.id.taskCategory);
         notificationCb = itemView.findViewById(R.id.notificationCheckBox);
         notificationCb.setClickable(false);
+        this.onTaskClickListener = onTaskClickListener;
 
+        itemView.setOnClickListener(this);
     }
 
     public TextView getTitleTv() {
@@ -60,5 +64,10 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
     public CheckBox getNotificationCb() {
         return notificationCb;
+    }
+
+    @Override
+    public void onClick(View view) {
+        onTaskClickListener.onItemClick(getAdapterPosition());
     }
 }

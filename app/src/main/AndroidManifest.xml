@@ -10,6 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoListApp">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".Task.TaskInformationActivity"
+            android:exported="false" />
+        <activity
             android:name=".Task.TaskActivity"
             android:exported="false" />
         <activity

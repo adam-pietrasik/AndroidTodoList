@@ -20,11 +20,16 @@ public interface TaskDAO {
     List<TaskData> getAllCategories(String category);
 
     @Query("SELECT * FROM task_data_table WHERE title LIKE :title || '%' ")
-    List<TaskData> getTaskByTitle(String title);
+    List<TaskData> getTasksByTitle(String title);
+
+    @Query("SELECT * FROM task_data_table WHERE id LIKE :id LIMIT 1")
+    TaskData getTaskById(int id);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskData... taskData);
 
-    @Update
-    void updateTask(TaskData taskData);
+    @Query("UPDATE task_data_table SET title = :title, description = :description, " +
+            "category = :category, notification_enable = :notificationChecked WHERE id = :id")
+    void updateTask(String title, String description,
+                    String category, boolean notificationChecked, int id);
 }
