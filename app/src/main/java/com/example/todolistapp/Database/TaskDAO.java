@@ -13,14 +13,14 @@ import java.util.List;
 @Dao
 public interface TaskDAO {
 
-    @Query("SELECT * FROM task_data_table")
+    @Query("SELECT * FROM task_data_table ORDER BY task_end_date ASC")
     List<TaskData> getAllData();
 
     @Query("SELECT * FROM task_data_table WHERE category LIKE :category")
     List<TaskData> getAllCategories(String category);
 
-    @Query("SELECT * FROM task_data_table WHERE title LIKE :title LIMIT 1")
-    TaskData getTaskByTitle(String title);
+    @Query("SELECT * FROM task_data_table WHERE title LIKE :title || '%' ")
+    List<TaskData> getTaskByTitle(String title);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskData... taskData);

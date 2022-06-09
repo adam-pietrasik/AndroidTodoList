@@ -2,7 +2,6 @@ package com.example.todolistapp;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,8 +10,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.todolistapp.Database.TaskDatabase;
 import com.example.todolistapp.RecyclerView.TasksAdapter;
@@ -28,8 +28,11 @@ public class MainActivity extends AppCompatActivity {
     private List<TaskData> taskDataList;
     private TaskData taskData;
 
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private TasksAdapter adapter;
+
+    private EditText searchInput;
+    private ImageButton searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +42,18 @@ public class MainActivity extends AppCompatActivity {
         taskDataList = new ArrayList<>();
 
         initRecyclerView();
+        setTaskListData();
+
+        searchInput = findViewById(R.id.searchEditText);
+        searchButton = findViewById(R.id.searchButtonId);
 
         FloatingActionButton addTaskButton = findViewById(R.id.addTask);
         addTaskButton.setOnClickListener(l -> {
             changeActivity();
+        });
+
+        searchButton.setOnClickListener(l -> {
+            searchData();
         });
     }
 
@@ -59,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == Activity.RESULT_OK){
-                    addDataToTaskList();
+                    setTaskListData();
                 }
             }
         );
 
     @SuppressLint("NotifyDataSetChanged")
-    private void addDataToTaskList(){
+    private void setTaskListData(){
         TaskDatabase db = TaskDatabase.getDbInstance(this);
         taskDataList = db.taskDAO().getAllData();
         adapter.setItems(taskDataList);
@@ -77,6 +88,19 @@ public class MainActivity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void searchData(){
+        String searchTitle = searchInput.getText().toString();
+        if(searchTitle.isEmpty()){
+            setTaskListData();
+        }
+        else{
+            TaskDatabase db = TaskDatabase.getDbInstance(this);
+            taskDataList = db.taskDAO().getTaskByTitle(searchTitle);
+            adapter.setItems(taskDataList);
+            adapter.notifyDataSetChanged();
+        }
+    }
 //    @Override
 //    protected void onSaveInstanceState(@NonNull Bundle outState) {
 //        super.onSaveInstanceState(outState);
