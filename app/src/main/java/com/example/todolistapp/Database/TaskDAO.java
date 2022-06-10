@@ -34,7 +34,7 @@ public interface TaskDAO {
     void insertAll(TaskData... taskData);
 
     @Query("UPDATE task_data_table SET title = :title, description = :description, " +
-            "category = :category, notification_enable = :notificationChecked WHERE id = :id")
+            "category = :category, task_done = :taskDone, notification_enable = :notificationChecked WHERE id = :id")
     void updateTask(String title, String description,
-                    String category, boolean notificationChecked, int id);
+                    String category, boolean taskDone, boolean notificationChecked, int id);
 }

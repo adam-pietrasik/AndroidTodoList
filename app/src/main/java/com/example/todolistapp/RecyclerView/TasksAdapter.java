@@ -37,8 +37,9 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         holder.getNotificationCb().setChecked(taskDataList.get(position).notificationEnable);
         holder.getCategoryTv().setText(taskDataList.get(position).category);
         holder.getTaskCompletedTimeTv().setText(taskDataList.get(position).taskEndDate);
-//        String done = taskDataList.get(position).taskDone ? "Done" : "In progress";
-//        holder.getDoneCheckBox().setText(done);
+        String done = taskDataList.get(position).taskDone ? "Done" : "In progress";
+        holder.getDoneCheckBox().setChecked(taskDataList.get(position).taskDone);
+        holder.getDoneCheckBox().setText(done);
     }
 
     @Override

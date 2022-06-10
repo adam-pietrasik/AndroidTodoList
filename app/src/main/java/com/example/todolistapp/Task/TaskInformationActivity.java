@@ -16,7 +16,7 @@ public class TaskInformationActivity extends AppCompatActivity {
     private EditText titleEditText;
     private EditText descriptionEditText;
     private EditText categoryEditText;
-
+    private CheckBox doneCheckBox;
     private CheckBox notificationCheckBox;
     private Button updateButton;
 
@@ -55,6 +55,7 @@ public class TaskInformationActivity extends AppCompatActivity {
                     descriptionEditText.getText().toString(),
                     categoryEditText.getText().toString(),
                     notificationCheckBox.isChecked(),
+                    doneCheckBox.isChecked(),
                     id
             );
             setResult(RESULT_OK);
@@ -68,6 +69,7 @@ public class TaskInformationActivity extends AppCompatActivity {
         categoryEditText = findViewById(R.id.newCategoryEditText);
         notificationCheckBox = findViewById(R.id.newNotificationCheckBox);
         updateButton = findViewById(R.id.updateTaskButton);
+        doneCheckBox = findViewById(R.id.taskDone);
     }
 
     private void getFromDatabase(int id){
