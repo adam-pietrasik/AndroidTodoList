@@ -27,13 +27,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
-    <TextView
-        android:id="@+id/taskDoneTextView"
+    <CheckBox
+        android:id="@+id/taskDoneCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="44dp"
-        android:hint="In progress"
+        android:text="In progress"
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -76,6 +76,6 @@
         android:layout_marginTop="52dp"
         android:text="Notification"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskDoneTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/taskDoneCheckBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
