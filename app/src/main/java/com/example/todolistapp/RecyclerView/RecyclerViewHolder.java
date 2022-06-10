@@ -20,6 +20,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.
 
     private CheckBox notificationCb;
 
+
     private OnTaskClickListener onTaskClickListener;
 
     public RecyclerViewHolder(@NonNull View itemView, OnTaskClickListener onTaskClickListener){

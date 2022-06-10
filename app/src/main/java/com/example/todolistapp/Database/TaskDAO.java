@@ -4,7 +4,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import com.example.todolistapp.Task.TaskData;
 
@@ -24,6 +23,12 @@ public interface TaskDAO {
 
     @Query("SELECT * FROM task_data_table WHERE id LIKE :id LIMIT 1")
     TaskData getTaskById(int id);
+
+    @Query("SELECT category FROM task_data_table GROUP BY category")
+    List<String> getCategories();
+
+    @Query("SELECT * FROM task_data_table WHERE category LIKE :category")
+    List<TaskData> getTaskByCategories(String category);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskData... taskData);
