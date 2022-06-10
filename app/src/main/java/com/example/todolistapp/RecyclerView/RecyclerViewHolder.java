@@ -15,10 +15,11 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.
     private TextView descriptionTv;
     private TextView taskCreatedTimeTv;
     private TextView taskCompletedTimeTv;
-    private TextView doneTv;
     private TextView categoryTv;
 
     private CheckBox notificationCb;
+    private CheckBox doneCheckBox;
+
 
     private OnTaskClickListener onTaskClickListener;
 
@@ -29,10 +30,13 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.
         descriptionTv = itemView.findViewById(R.id.descriptionTextView);
         taskCreatedTimeTv = itemView.findViewById(R.id.timeTaskCreatedTextView);
         taskCompletedTimeTv = itemView.findViewById(R.id.timeTaskCompletedTextView);
-        doneTv = itemView.findViewById(R.id.taskDoneTextView);
+
         categoryTv = itemView.findViewById(R.id.taskCategory);
         notificationCb = itemView.findViewById(R.id.notificationCheckBox);
         notificationCb.setClickable(false);
+
+        doneCheckBox = itemView.findViewById(R.id.taskDoneCheckBox);
+        doneCheckBox.setClickable(false);
         this.onTaskClickListener = onTaskClickListener;
 
         itemView.setOnClickListener(this);
@@ -54,8 +58,8 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.
         return taskCompletedTimeTv;
     }
 
-    public TextView getDoneTv() {
-        return doneTv;
+    public CheckBox getDoneCheckBox() {
+        return doneCheckBox;
     }
 
     public TextView getCategoryTv() {

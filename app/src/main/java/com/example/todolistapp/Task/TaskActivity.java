@@ -27,6 +27,7 @@ public class TaskActivity extends AppCompatActivity {
     private EditText taskDescriptionEditText;
     private EditText categoryNameEditText;
     private CheckBox taskNotification;
+
     private Button addTaskButton;
     private Button chooseDateButton;
 

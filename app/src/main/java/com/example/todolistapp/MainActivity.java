@@ -1,21 +1,27 @@
 package com.example.todolistapp;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todolistapp.Database.TaskDatabase;
 import com.example.todolistapp.RecyclerView.OnTaskClickListener;
 import com.example.todolistapp.RecyclerView.TasksAdapter;
+import com.example.todolistapp.Settings.SettingsActivity;
 import com.example.todolistapp.Task.TaskActivity;
 import com.example.todolistapp.Task.TaskData;
 import com.example.todolistapp.Task.TaskInformationActivity;
@@ -23,11 +29,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements OnTaskClickListener {
 
     private List<TaskData> taskDataList;
-    private TaskData taskData;
 
     private RecyclerView recyclerView;
     private TasksAdapter adapter;
@@ -44,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
 
         initRecyclerView();
         setTaskListData();
+
+        settingsChange();
 
         searchInput = findViewById(R.id.searchEditText);
         searchButton = findViewById(R.id.searchButtonId);
@@ -99,6 +107,39 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         taskActivityResultLauncher.launch(intent);
     }
 
+
+    private void settingsChange(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean hideTasks = preferences.getBoolean("hide_completed_tasks", false);
+        String category = preferences.getString("categories", "All");
+        String notificationTimer = preferences.getString("notifications", "30");
+
+        if(category.equals("All")){
+            setTaskListData();
+        }
+        else{
+            changeTasksByCategory(category);
+        }
+
+        if(hideTasks){
+            hideCompletedTasks();
+        }
+    }
+
+    private void hideCompletedTasks(){
+        taskDataList = taskDataList.stream()
+                .filter(taskData -> taskData.taskDone)
+                .collect(Collectors.toList());
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void changeTasksByCategory(String category){
+        TaskDatabase db = TaskDatabase.getDbInstance(this);
+        taskDataList = db.taskDAO().getTaskByCategories(category);
+        adapter.setItems(taskDataList);
+        adapter.notifyDataSetChanged();
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private void searchData(){
         String searchTitle = searchInput.getText().toString();
@@ -120,22 +161,23 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         intent.putExtra("Task_id", id);
         taskInformationResultLauncher.launch(intent);
     }
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        if(taskData != null){
-//            outState.putParcelableArrayList("TaskDataList", (ArrayList<? extends Parcelable>) taskDataList);
-//            getIntent().putExtras(outState);
-//        }
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Intent intent = getIntent();
-//        Bundle data = intent.getExtras();
-//        if(data != null){
-//            taskDataList = data.getParcelableArrayList("TaskData");
-//        }
-//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

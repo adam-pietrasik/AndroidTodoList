@@ -40,13 +40,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="@android:dimen/thumbnail_width"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="24dp"
         android:textSize="24sp"
         android:hint="Category"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/taskDone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newDescriptionEditText" />
+
+    <CheckBox
+        android:id="@+id/taskDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task done"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newDescriptionEditText"
+        app:layout_constraintStart_toEndOf="@+id/newCategoryEditText"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        />
 
     <CheckBox
         android:id="@+id/newNotificationCheckBox"
