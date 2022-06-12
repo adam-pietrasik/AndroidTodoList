@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.todolistapp.Database.TaskDatabase;
+import com.example.todolistapp.MainActivity;
 import com.example.todolistapp.R;
 
 public class TaskInformationActivity extends AppCompatActivity {

@@ -118,9 +118,10 @@ public class TaskActivity extends AppCompatActivity {
         int minute = calendar.get(Calendar.MINUTE);
         datePickerDialog = new DatePickerDialog(this,
                 (datePicker, y, M, d) -> { //year, month, day
-                    taskEndDate = checkDigit(d) + "/" + checkDigit(M) + "/" + y;
+                    taskEndDate = checkDigit(d) + "/" + checkDigit(M + 1) + "/" + y;
                     new TimePickerDialog(this, (view, h, m) -> { //hour, minute
                         taskEndDate = taskEndDate + " " + checkDigit(h) + ":" + checkDigit(m);
+                        System.out.println(taskEndDate);
                     }, hour, minute, true).show();
                 },
                 year, month, dayOfMonth);
