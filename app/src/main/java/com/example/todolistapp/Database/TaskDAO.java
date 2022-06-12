@@ -30,6 +30,9 @@ public interface TaskDAO {
     @Query("SELECT * FROM task_data_table WHERE category LIKE :category")
     List<TaskData> getTaskByCategories(String category);
 
+    @Query("SELECT * FROM task_data_table WHERE task_done NOT LIKE :taskDone")
+    List<TaskData> getTaskByTaskDone(boolean taskDone);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(TaskData... taskData);
 

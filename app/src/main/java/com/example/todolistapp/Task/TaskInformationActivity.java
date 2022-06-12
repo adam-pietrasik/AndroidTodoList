@@ -43,6 +43,7 @@ public class TaskInformationActivity extends AppCompatActivity {
             descriptionEditText.setText(taskData.description);
             categoryEditText.setText(taskData.category);
             notificationCheckBox.setChecked(taskData.notificationEnable);
+            doneCheckBox.setChecked(taskData.taskDone);
             onUpdateClicked();
         }
     }
@@ -54,8 +55,8 @@ public class TaskInformationActivity extends AppCompatActivity {
                     titleEditText.getText().toString(),
                     descriptionEditText.getText().toString(),
                     categoryEditText.getText().toString(),
-                    notificationCheckBox.isChecked(),
                     doneCheckBox.isChecked(),
+                    notificationCheckBox.isChecked(),
                     id
             );
             setResult(RESULT_OK);
