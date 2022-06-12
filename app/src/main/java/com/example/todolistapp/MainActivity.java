@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             result -> {
                 if(result.getResultCode() == Activity.RESULT_OK){
                     setTaskListData();
+                    settingsChange();
                 }
             }
         );
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             result -> {
                 if(result.getResultCode() == Activity.RESULT_OK){
                     setTaskListData();
+                    settingsChange();
                 }
             }
     );
@@ -122,14 +124,16 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         }
 
         if(hideTasks){
-            hideCompletedTasks();
+            hideCompletedTasks(hideTasks);
         }
     }
 
-    private void hideCompletedTasks(){
-        taskDataList = taskDataList.stream()
-                .filter(taskData -> taskData.taskDone)
-                .collect(Collectors.toList());
+    @SuppressLint("NotifyDataSetChanged")
+    private void hideCompletedTasks(boolean hideTasks){
+        TaskDatabase db = TaskDatabase.getDbInstance(this);
+        taskDataList = db.taskDAO().getTaskByTaskDone(hideTasks);
+        adapter.setItems(taskDataList);
+        adapter.notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
